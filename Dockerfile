@@ -7,4 +7,5 @@ RUN echo "Dockerfile Test on Apache2" > /var/www/html/index.html
 
 EXPOSE 80
 
-ENTRYPOINT [""]
+ENTRYPOINT ["/usr/sbin/apachectl"]
+CMD ["-D", "FOREGROUND"]
