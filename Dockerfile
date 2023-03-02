@@ -1,11 +1,30 @@
-FROM debian:bullseye
+FROM golang:1.16-alpine
 
-RUN apt-get update
-RUN apt-get -y install tzdata
-RUN apt-get -y install apache2
-RUN echo "Dockerfile Test on Apache2" > /var/www/html/index.html
+# Set destination for COPY
+WORKDIR /app
 
-EXPOSE 80
+# Download Go modules
+COPY go.mod .
+COPY go.sum .
+RUN go mod download
 
-ENTRYPOINT ["/usr/sbin/apachectl"]
-CMD ["-D", "FOREGROUND"]
+# Copy the source code. Note the slash at the end, as explained in
+# https://docs.docker.com/engine/reference/builder/#copy
+COPY *.go ./
+
+# Build
+RUN go build -o /docker-gs-ping
+
+# This is for documentation purposes only.
+# To actually open the port, runtime parameters
+# must be supplied to the docker command.
+EXPOSE 8080
+
+# (Optional) environment variable that our dockerised
+# application can make use of. The value of environment
+# variables can also be set via parameters supplied
+# to the docker command on the command line.
+#ENV HTTP_PORT=8081
+
+# Run
+CMD [ "/docker-gs-ping" ]
