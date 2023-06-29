@@ -5,6 +5,8 @@ RUN apt-get -y install tzdata
 RUN apt-get -y install apache2
 RUN echo "Dockerfile Test on Apache2" > /var/www/html/index.html
 
+RUN echo "toto"
+
 EXPOSE 80
 
 ENTRYPOINT ["/usr/sbin/apachectl"]
